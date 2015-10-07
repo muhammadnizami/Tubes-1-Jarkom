@@ -1,0 +1,14 @@
+#ifndef FRAME_H
+#define FRAME_H
+
+
+
+#define MAX_FRAME_LENGTH 65507
+
+class frame{
+	private:
+	int length;
+	char framebits
+};
+
+#endif
