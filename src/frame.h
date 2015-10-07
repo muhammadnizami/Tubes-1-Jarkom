@@ -1,8 +1,10 @@
 #ifndef FRAME_H
 #define FRAME_H
 
-#define MAX_FRAME_LENGTH 65507
+#include "checksum.h"
 
+#define MAX_FRAME_LENGTH 65507
+#define MAX_FRAME_DATA_LENGTH (MAX_FRAME_LENGTH-CHECKSUM_MAX_LENGTH)
 #include <string>
 
 class frame{
@@ -12,19 +14,19 @@ class frame{
 
 	//untuk membuat dari frameNumber dan data
 	//membuat frame dari frameNumber dan data sesuai format, termasuk menghitung checksum
-	frame(int frameNumber, std::string data);
-	char* getPointerToBytes();
-	int getBytesLength();
+	frame(unsigned int frameNumber, std::string data);
+	const char* getPointerToBytes() const;
+	int getBytesLength() const;
 
 	//untuk mengoperasikan bytes
 	frame(std::string bytes);
-	frame(char * bytes, int size);
-	int getFrameNumber(); //mengembalikan frame number. prekondisi: isValid();
-	std::string getData(); //mengembalikan data. prekondisi: isValid();
-	std::string getChecksum(); //mengembalikan checksum. prekondisi: formatIsValid();
-	bool formatIsValid(); //mengembalikan true bila format benar
-	bool checksumIsValid(); //mengembalikan true bila checksum benar
-	bool isValid(); //mengembalikan true bila format dan checksum benar
+	frame(char * bytes, size_t size);
+	unsigned int getFrameNumber() const; //mengembalikan frame number. prekondisi: isValid();
+	std::string getData() const; //mengembalikan data. prekondisi: isValid();
+	std::string getChecksum() const; //mengembalikan checksum. prekondisi: formatIsValid();
+	bool formatIsValid() const; //mengembalikan true bila format benar
+	bool checksumIsValid() const; //mengembalikan true bila checksum benar
+	bool isValid() const; //mengembalikan true bila format dan checksum benar
 
 	private:
 	std::string bytes;
