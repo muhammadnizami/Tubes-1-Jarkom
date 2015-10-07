@@ -59,7 +59,9 @@ bool ackframe::checksumIsValid() const{
 	return checkChecksum(getChecksum(),bytes.substr(0,5));
 } //mengembalikan true bila checksum benar
 bool ackframe::isValid() const{
-	return (formatIsValid() && checksumIsValid());
+	if (formatIsValid()){
+		return checksumIsValid();
+	}else return false;
 } //mengembalikan true bila format dan checksum benar
 
 #endif
