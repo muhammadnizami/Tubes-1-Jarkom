@@ -1,32 +1,30 @@
 #ifndef FRAME_H
 #define FRAME_H
 
-#define MAX_FRAME_LENGTH 65507
-
 #include <string>
 #include "dcomm.h"
 
-class frame{
+class ackframe{
 	public:
 	//untuk buffer kosong
-	frame():bytes(""){};
+	ackframe():bytes(""){};
 
 	//untuk membuat dari acktype dan frameNumber
-	frame(char acktype, int frameNumber);
-	char* getPointerToBytes();
-	int getBytesLength();
+	ackframe(char acktype, unsigned int frameNumber);
+	const char* getPointerToBytes() const;
+	int getBytesLength() const;
 
 	//untuk mengoperasikan bytes
-	frame(std::string bytes);
-	frame(char * bytes, int size);
-	int getFrameNumber(); //mengembalikan frame number
-	char getacktype(); //mengembalikan byte pertama bytes. prekondisi: isValid()
-	bool isACK(); //getacktype==ACK
-	bool isNAK(); //getacktype==NAK
-	std::string getChecksum(); //mengembalikan checksum. prekondisi: formatIsValid();
-	bool formatIsValid(); //mengembalikan true bila format benar
-	bool checksumIsValid(); //mengembalikan true bila checksum benar
-	bool isValid(); //mengembalikan true bila format dan checksum benar
+	ackframe(const std::string& bytes);
+	ackframe(const char * bytes, size_t size);
+	unsigned int getFrameNumber() const; //mengembalikan frame number. prekondisi: isValid()
+	char getacktype() const; //mengembalikan byte pertama bytes. prekondisi: isValid()
+	bool isACK() const; //getacktype==ACK
+	bool isNAK() const; //getacktype==NAK
+	std::string getChecksum() const; //mengembalikan checksum. prekondisi: formatIsValid()
+	bool formatIsValid() const; //mengembalikan true bila format benar
+	bool checksumIsValid() const; //mengembalikan true bila checksum benar
+	bool isValid() const; //mengembalikan true bila format dan checksum benar
 
 	private:
 	std::string bytes;
