@@ -5,8 +5,8 @@
 
 //bikin pake std hash function aja
 
-std::string createChecksum(std::string);
+std::string createChecksum(const std::string&);
 
-bool checkChecksum(std::string checksum, std::string checkedstr);
+bool checkChecksum(const std::string& checksum, const std::string& checkedstr);
 
 #endif
