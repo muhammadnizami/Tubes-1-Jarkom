@@ -1,5 +1,5 @@
-#ifndef FRAME_H
-#define FRAME_H
+#ifndef ACKFRAME_H
+#define ACKFRAME_H
 
 #include <string>
 #include "dcomm.h"
