@@ -12,7 +12,7 @@ class receiver{
 	public:
 	std::string popStringFromOneFrame();
 	receiver& operator>>(std::stream str);
-	bool listen(int port);
+	bool listen(char* port);
 	bool startReceiving();
 	bool stopReceiving();
 

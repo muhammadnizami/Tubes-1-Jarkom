@@ -12,7 +12,7 @@ class sender{
 	public:
 	sender& operator<<(std::string msg);
 	sender& operator<<(std::stream str);
-	bool connect(char* ip_str, int port);
+	bool connect(char* ip_str, char* port);
 	bool startSending();
 	bool stopSending();
 
