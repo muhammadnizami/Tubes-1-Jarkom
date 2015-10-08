@@ -32,8 +32,7 @@ frame::frame(std::string _bytes){
 }
 frame::frame(char * _bytes, size_t size):bytes(_bytes,size){
 }
-unsigned int frame::getFrameNumber() const{ //mengembalikan frame number. prekondisi: isValid();
-	assert(isValid());
+unsigned int frame::getFrameNumber() const{ //mengembalikan frame number. prekondisi: isValid(); bila tidak, undefined behavior
 	return ((unsigned int)(unsigned char)bytes[4] << 24) | ((unsigned int)(unsigned char)bytes[3] << 16) | ((unsigned int)(unsigned char)bytes[2] << 8) | ((unsigned int)(unsigned char)bytes[1]);;
 }
 std::string frame::getData() const{ //mengembalikan data. prekondisi: isValid()

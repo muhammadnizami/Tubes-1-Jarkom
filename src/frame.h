@@ -21,7 +21,7 @@ class frame{
 	//untuk mengoperasikan bytes
 	frame(std::string bytes);
 	frame(char * bytes, size_t size);
-	unsigned int getFrameNumber() const; //mengembalikan frame number. prekondisi: isValid();
+	unsigned int getFrameNumber() const; //mengembalikan frame number. prekondisi: isValid(); bila tidak, undefined behavior.
 	std::string getData() const; //mengembalikan data. prekondisi: isValid();
 	std::string getChecksum() const; //mengembalikan checksum. prekondisi: formatIsValid();
 	bool formatIsValid() const; //mengembalikan true bila format benar
