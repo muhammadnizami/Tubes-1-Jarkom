@@ -18,6 +18,8 @@
 #define XOFF (0x13)
 
 /* SLIDING WINDOW Properties*/
-#define WINDOW_SIZE
+#define WINDOW_SIZE 5
+#define bufsize 4096
+
 
 #endif
