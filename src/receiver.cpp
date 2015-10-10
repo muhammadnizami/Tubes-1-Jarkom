@@ -94,6 +94,11 @@ void * receiving (void * callerobj){
 		frame curframe(bufchar,msglen);
 		if (curframe.formatIsValid()){
 			if (curframe.checksumIsValid()){
+
+				//putting to windowed buffer
+				if (caller->isInWindow(curframe.getFrameNumber()))
+					caller->putframetowindowedbuffer(curframe);
+
 				//sending ACK
 				ackframe curack(ACK,curframe.getFrameNumber());
 				//std::cerr<<"sending ACK"<<std::endl;
@@ -102,9 +107,6 @@ void * receiving (void * callerobj){
 				//std::cerr<<(sentBytes<=0?"error sending ACK":"ACK sent")<<std::endl;
 				//std::cerr.flush();
 
-				//putting to windowed buffer
-				if (caller->isInWindow(curframe.getFrameNumber()))
-					caller->putframetowindowedbuffer(curframe);
 				
 			}else{
 				//sending NAK
@@ -133,7 +135,7 @@ void receiver::putframetowindowedbuffer(const frame& f){
 	buffer[fpos]=f;
 	bufferIsFilled[fpos]=true;
 	while(bufferIsFilled[windowposition]){
-		if(windowPastEnd()==buffertail) break;
+		if(windowPastEnd()==buffertail) usleep(1000);
 		geserWindow();
 	}
 	//std::cerr<<" put frame to buffer "<<fpos<<std::endl;
