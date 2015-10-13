@@ -4,7 +4,7 @@
 #include "checksum.h"
 
 #define MAX_FRAME_LENGTH 65507
-#define MAX_FRAME_DATA_LENGTH (MAX_FRAME_LENGTH-CHECKSUM_MAX_LENGTH)
+#define MAX_FRAME_DATA_LENGTH (MAX_FRAME_LENGTH-CHECKSUM_MAX_LENGTH-7)
 #include <string>
 
 class frame{
