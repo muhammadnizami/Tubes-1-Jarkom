@@ -9,6 +9,11 @@
 #include <sstream>
 #include <functional>
 
+
+//SALAH
+//harus diganti jadi yang CRC
+//lihat https://en.wikipedia.org/wiki/Computation_of_cyclic_redundancy_checks
+
 //bikin pake std hash function aja
 //saat kompilasi tambahkan -std=c++11
 //formatnya harus sesuai antara createChecksum dan checkChecksum
