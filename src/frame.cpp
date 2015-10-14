@@ -39,12 +39,13 @@ std::string frame::getData() const{ //mengembalikan data. prekondisi: isValid()
 	assert(isValid());
 	unsigned int STXpos=5;
 	unsigned int ETXpos;
-	for (ETXpos=bytes.length()-1;bytes[ETXpos]!=ETX;ETXpos--){}
+	for (ETXpos=STXpos;bytes[ETXpos]!=ETX;ETXpos++){}
 	return bytes.substr(STXpos+1,ETXpos-STXpos-1);
 }
 std::string frame::getChecksum()const{ //mengembalikan checksum. prekondisi: formatIsValid()
+	unsigned int STXpos=5;
 	unsigned int ETXpos;
-	for (ETXpos=bytes.length()-1;bytes[ETXpos]!=ETX;ETXpos--){}
+	for (ETXpos=STXpos;bytes[ETXpos]!=ETX;ETXpos++){}
 	return bytes.substr(ETXpos+1,bytes.length()-ETXpos);
 }
 bool frame::formatIsValid() const{ //mengembalikan true bila format benar
@@ -56,8 +57,9 @@ bool frame::formatIsValid() const{ //mengembalikan true bila format benar
 }
 bool frame::checksumIsValid() const{ //mengembalikan true bila checksum benar
 	assert(formatIsValid());
+	unsigned int STXpos=5;
 	unsigned int ETXpos;
-	for (ETXpos=bytes.length()-1;bytes[ETXpos]!=ETX;ETXpos--){}
+	for (ETXpos=STXpos;bytes[ETXpos]!=ETX;ETXpos++){}
 	return checkChecksum(getChecksum(),bytes.substr(0,ETXpos+1));
 }
 bool frame::isValid() const{ //mengembalikan true bila format dan checksum benar
