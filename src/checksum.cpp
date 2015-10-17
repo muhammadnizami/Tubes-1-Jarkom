@@ -1,40 +1,10 @@
-#if __cplusplus <= 199711L
-  #error Perlu support c++11. Coba tambahkan -std=c++11 sebagai tag kompilasi.
-#else
-
 #ifndef CHECKSUM_CPP
 #define CHECKSUM_CPP
 
 #include "checksum.h"
-#include <sstream>
-#include <functional>
+#include <string>
 
-
-//SALAH
-//harus diganti jadi yang CRC
-//lihat https://en.wikipedia.org/wiki/Computation_of_cyclic_redundancy_checks
-
-//bikin pake std hash function aja
-//saat kompilasi tambahkan -std=c++11
-//formatnya harus sesuai antara createChecksum dan checkChecksum
-
-class polynom{
-
-};
-
-std::hash<std::string> hash_fn;
-
-std::string createChecksum(const std::string& in){
-	std::ostringstream ostr;
-	ostr<<hash_fn(in);
-	return ostr.str();
-}
-
-bool checkChecksum(const std::string& checksum, const std::string& checkedstr){
-	return checksum==createChecksum(checkedstr);
-}
-
-/* YANG INI DARI ROSETTACODE.ORG
+// YANG INI DARI ROSETTACODE.ORG
 
 #include <algorithm>
 #include <array>
@@ -86,8 +56,20 @@ std::uint_fast32_t crc(InputIterator first, InputIterator last)
           { return table[(checksum ^ value) & 0xFFu] ^ (checksum >> 8); });
 }
 
-*/
+
+
+std::string createChecksum(const std::string& in){
+	uint32_t rrr=crc(in.begin(),in.end());
+	std::string retval="";
+	for(int i = 0; i < sizeof(rrr); i++) {
+		retval+=((unsigned char)(rrr >> (i * 8)));
+	}
+	return retval;
+}
+
+bool checkChecksum(const std::string& checksum, const std::string& checkedstr){
+	return checksum==createChecksum(checkedstr);
+}
 
 #endif
 
-#endif
