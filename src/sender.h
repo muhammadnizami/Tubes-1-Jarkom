@@ -25,18 +25,24 @@ class sender{
 	bool connect(const char* ip_str, int port);
 	bool startSending();
 	bool stopSending();
-	bool isBufferFull();
 
 	private:
-	const int bufsize_sender = 10;
+	static const int bufsize_sender = 10;
 	
-	frame buffer[bufsize];
-	int windowposition=-1;
+	frame buffer[bufsize_sender];
+	int windowposition=0;
 	const int windowsize=WINDOW_SIZE;
 	int bufferhead=0; //menunjukkan posisi "kepala" buffer: Posisi frame terakhir yang di-buffer
-	bool sent [bufsize];
-	bool acked [bufsize];
-		
+	bool sent [bufsize_sender];
+	bool acked [bufsize_sender];
+
+	bool isBufferFull=false;
+
+	int s;
+	struct sockaddr_in si_other;
+
+	std::string text;
+
 	int framenumber = 0;
 	const int charperframe = 5;
 
@@ -45,13 +51,13 @@ class sender{
 	//fungsi yang dipanggil thread dijadikan friend
 	friend void* /*mohon disesuaikan*/ sending (void * callerobj);
 	friend void* /*mohon disesuaikan*/ listenack (void * callerobj);
-
+	friend void* /*mohon disesuaikan*/ consume (void * callerobj);
 	//kontrol thread
-	int isSending=false;
+	bool isSending=false;
 
 	//fungsi helper
-	void geserJendela(int n){windowposition=(windowposition+n)%bufsize_sender;}
-	void geserBufferHead(){bufferhead=(bufferhead+1)%bufsize_sender;}
+	void geserJendela(int n){windowposition=(windowposition+n)%bufsize_sender;isBufferFull=false;}
+	void geserBufferHead(){bufferhead=(bufferhead+1)%bufsize_sender;if(bufferhead==windowposition){isBufferFull=true;}}
 };
 
 #endif
