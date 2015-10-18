@@ -31,6 +31,7 @@ std::string receiver::popStringFromOneFrame(){
 	return curFrame.getData();
 }
 
+#define WAITBEFORECLOSEDURATION 2000000
 receiver& receiver::operator>>(std::ostream& str){
 	startReceiving();
 	std::string curString = "";
@@ -41,6 +42,7 @@ receiver& receiver::operator>>(std::ostream& str){
 	}while (!curString.empty()?*curString.rbegin()!=Endfile:true);
 	curString.pop_back();
 	str<<curString;
+	usleep(WAITBEFORECLOSEDURATION);
 	stopReceiving();
 	closefd();
 	return *this;
