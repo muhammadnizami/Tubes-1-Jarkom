@@ -26,6 +26,7 @@ class sender{
 	bool connect(const char* ip_str, int port);
 	bool startSending();
 	bool stopSending();
+	bool closefd();
 
 	private:
 	static const int bufsize_sender = bufsize;

@@ -49,23 +49,32 @@ void* listenack (void * callerobj){
 	sender* senderobj = reinterpret_cast<sender*>(callerobj);
 	if ( senderobj != nullptr )
 	{
+				//waiting for ack
+		struct timeval tv;
+
+		tv.tv_sec = (int)(ACKTIMEOUTSECONDS*1000)/1000; 
+		tv.tv_usec = (int)(ACKTIMEOUTSECONDS*1000)%1000;  // Not init'ing this can cause strange errors
+		setsockopt(senderobj->s, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
+
 		socklen_t slen=sizeof(senderobj->si_other);
 		while ( senderobj->isSending || !senderobj->bufferIsEmpty())
 		{
 			//menerima ack
 			char bufchar[128];
 			int ackframelen=recvfrom(senderobj->s, bufchar, 128, 0,(struct sockaddr *) &senderobj->si_other, &slen);
-			ackframe AF(bufchar,ackframelen);
-			if (AF.isValid()){
-				int framenum=AF.getFrameNumber();
-				std::cout<<(AF.isACK()?"ACK ":"NAK ")<<framenum<<std::endl;
-				if (senderobj->sent[framenum])
-					if (AF.isACK())
-						senderobj->acked[framenum]=true;
-					else
-						senderobj->sent[framenum]=false;
-			}else{
-				std::cout<<"invalid ack received"<<std::endl;
+			if (ackframelen>=0){
+				ackframe AF(bufchar,ackframelen);
+				if (AF.isValid()){
+					int framenum=AF.getFrameNumber();
+					std::cout<<(AF.isACK()?"ACK ":"NAK ")<<framenum<<std::endl;
+					if (senderobj->sent[framenum])
+						if (AF.isACK())
+							senderobj->acked[framenum]=true;
+						else
+							senderobj->sent[framenum]=false;
+				}else{
+					std::cout<<"invalid ack received"<<std::endl;
+				}
 			}
 		}
 	}
@@ -140,6 +149,7 @@ sender& sender::operator<<(std::istream& str){
 	*this<<msg;
 	
 	stopSending(); //harusnya dipanggil waktu baca EOF
+	closefd();
 	return *this;
 }
 
@@ -186,6 +196,10 @@ std::string getReal(const std::string& in){
 		retval+=c;
 	}
 	return retval;
+}
+
+bool sender::closefd(){
+	return close(s);
 }
 
 
