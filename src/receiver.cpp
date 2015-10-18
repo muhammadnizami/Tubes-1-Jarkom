@@ -33,15 +33,14 @@ std::string receiver::popStringFromOneFrame(){
 
 receiver& receiver::operator>>(std::ostream& str){
 	startReceiving();
-	std::string curString;
+	std::string curString = "";
 	do{
+		str<<curString;
+		str.flush();
 		curString=popStringFromOneFrame();
-		for (std::string::iterator it=curString.begin();it!=curString.end();it++){
-			str<<*it;
-			str.flush();
-		}
 	}while (!curString.empty()?*curString.rbegin()!=Endfile:true);
-	str<<EOF;
+	curString.pop_back();
+	str<<curString;
 	stopReceiving();
 	closefd();
 	return *this;
