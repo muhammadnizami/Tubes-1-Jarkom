@@ -46,7 +46,7 @@ class sender{
 
 	std::string text;
 
-	const int charperframe = 5;
+	const int charperframe = PREFERREDFRAMEDATASIZE;
 
 	//tambah variabel socket
 

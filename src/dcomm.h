@@ -21,5 +21,9 @@
 #define WINDOW_SIZE 5
 #define bufsize 4096
 
+/* SENDER Properties */
+#define ACKTIMEOUTSECONDS 0.100
+#define PREFERREDFRAMEDATASIZE 5
+
 
 #endif

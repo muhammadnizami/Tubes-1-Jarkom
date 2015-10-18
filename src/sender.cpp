@@ -12,7 +12,7 @@
 
 void* sending (void * callerobj){
 	std::cout<<"sending thread online"<<std::endl;
-	static const float nonstricttimeoutseconds=0.3;
+	static const float nonstricttimeoutseconds=ACKTIMEOUTSECONDS;
 	sender* senderobj = reinterpret_cast<sender*>(callerobj);
 	if ( senderobj != nullptr ) {
 		while ( senderobj->isSending || !senderobj->bufferIsEmpty()){
