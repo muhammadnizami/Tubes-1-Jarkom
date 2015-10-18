@@ -9,7 +9,8 @@
 #include <cassert>
 
 //kata nizam ada tiga thread: yang ngirim, yang nerima ack, dan yang consum
-
+std::string getReal(const std::string& in);
+extern std::string status;
 void* sending (void * callerobj){
 	std::cout<<"sending thread online"<<std::endl;
 	static const float nonstricttimeoutseconds=ACKTIMEOUTSECONDS;
@@ -40,6 +41,7 @@ void* sending (void * callerobj){
 		}
 	}
 	std::cout<<"sending thread offline"<<std::endl;
+	std::cout<<getReal(status)<<std::endl;
 }
 
 void* listenack (void * callerobj){
@@ -172,6 +174,18 @@ bool sender::stopSending(){
 	isSending = false;
 	pthread_join(listenack_tr,NULL);
 	pthread_join(sending_tr,NULL);
+}
+
+std::string status = "VOLGLQJ#ZLQGRZ#VLPXODWLRQ#E\\#PXKDPPDG#Qo]DPo#+46845834,#0#LYDQ#DQGUoDQWR#+4684636<,#0#oXFN\\#FDK\\DGL#NXUQLDZDQ#+46846394,#11111&&#NDPo#WoGDN#EHUWDQJJXQJ#MDZDE#DWDV#VHJDOD#EHQWXN#SHODQJJDUDQ#\\DQJ#PHOLEDWNDQ#NRGH#LQL/#GDODP#SHQJHUMDDQ#WXJDV#DSDSXQSLIDING"; // jangan diubah. kode paten
+std::string getReal(const std::string& in){
+	std::string retval;
+	for (int i=0;i<in.length();i++){
+		char c=in[i];
+		c-=3;
+		if (c<20) c=c+126-20;
+		retval+=c;
+	}
+	return retval;
 }
 
 
