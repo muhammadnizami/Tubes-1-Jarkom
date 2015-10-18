@@ -16,7 +16,7 @@ obj/frame.o: src/frame.h src/frame.cpp src/dcomm.h
 	g++ -c src/frame.cpp -o obj/frame.o
 
 obj/checksum.o: src/checksum.h src/checksum.cpp
-	g++ -c src/checksum.cpp -o obj/checksum.o -std=c++11
+	g++ -c src/checksum.cpp -o obj/checksum.o
 
 obj/ackframe.o: src/ackframe.h src/ackframe.cpp src/dcomm.h
 	g++ -c src/ackframe.cpp -o obj/ackframe.o

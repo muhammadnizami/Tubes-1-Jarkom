@@ -3,63 +3,58 @@
 
 #include "checksum.h"
 #include <string>
+#include <cctype>
+#include <stdint.h>
 
-// YANG INI DARI ROSETTACODE.ORG
+uint32_t generatorPolynomial (0x814141AB);//CRC-32Q
+uint32_t checkZero (0x1);
 
-#include <algorithm>
-#include <array>
-#include <cstdint>
-#include <numeric>
-  
-// Generates a lookup table for the checksums of all 8-bit values.
-std::array<std::uint_fast32_t, 256> generate_crc_lookup_table() noexcept
-{
-  auto const reversed_polynomial = std::uint_fast32_t{0xEDB88320uL};
- 
-  // This is a function object that calculates the checksum for a value,
-  // then increments the value, starting from zero.
-  struct byte_checksum
-  {
-    std::uint_fast32_t operator()() noexcept
-    {
-      auto checksum = static_cast<std::uint_fast32_t>(n++);
- 
-      for (auto i = 0; i < 8; ++i)
-        checksum = (checksum >> 1) ^ ((checksum & 0x1u) ? reversed_polynomial : 0);
- 
-      return checksum;
-    }
- 
-    unsigned n = 0;
-  };
- 
-  auto table = std::array<std::uint_fast32_t, 256>{};
-  std::generate(table.begin(), table.end(), byte_checksum{});
- 
-  return table;
+//fungsi ini baru bisa dipakai jika MSB generatorPolynomial bernilai 1
+uint32_t crccompute(const std::string& in){
+	uint32_t tmpRemainingXOR (0);
+	uint32_t curUint32(0);
+	int i=0;
+	while(i<in.length()%4){
+		curUint32<<=8;
+		curUint32+=(uint8_t)in[i];
+		i++;
+	}
+	if (in.length()>=4)
+	for (int j=0;j<32;j++){
+		if (curUint32&(checkZero<<(32-j))){
+			curUint32^=generatorPolynomial>>j;
+			tmpRemainingXOR^=generatorPolynomial<<(32-j);
+		}
+	}
+	while(i<(int)in.length()-4){
+		curUint32 = 0;
+		for (int ii=0;ii<4;ii++){
+			curUint32<<=8;
+			curUint32+=(uint8_t)in[i];
+			i++;
+		}
+		curUint32^=tmpRemainingXOR;
+		tmpRemainingXOR = 0;		
+		for (int j=0;j<32;j++){
+			if (curUint32&(checkZero<<(32-j))){
+				curUint32^=generatorPolynomial>>j;
+				tmpRemainingXOR^=generatorPolynomial<<(32-j);
+			}
+		}
+	}
+	curUint32 = 0;
+	for (int ii=0;ii<4;ii++){
+		curUint32<<=8;
+		curUint32+=(uint8_t)in[i];
+		i++;
+	}
+	curUint32^=tmpRemainingXOR;
+	return curUint32;
 }
- 
-// Calculates the CRC for any sequence of values. (You could use type traits and a
-// static assert to ensure the values can be converted to 8 bits.)
-template <typename InputIterator>
-std::uint_fast32_t crc(InputIterator first, InputIterator last)
-{
-  // Generate lookup table only on first use then cache it - this is thread-safe.
-  static auto const table = generate_crc_lookup_table();
- 
-  // Calculate the checksum - make sure to clip to 32 bits, for systems that don't
-  // have a true (fast) 32-bit type.
-  return std::uint_fast32_t{0xFFFFFFFFuL} &
-    ~std::accumulate(first, last,
-      ~std::uint_fast32_t{0} & std::uint_fast32_t{0xFFFFFFFFuL},
-        [](std::uint_fast32_t checksum, std::uint_fast8_t value) 
-          { return table[(checksum ^ value) & 0xFFu] ^ (checksum >> 8); });
-}
-
 
 
 std::string createChecksum(const std::string& in){
-	uint32_t rrr=crc(in.begin(),in.end());
+	uint32_t rrr=crccompute(in);
 	std::string retval="";
 	for(int i = 0; i < sizeof(rrr); i++) {
 		retval+=((unsigned char)(rrr >> (i * 8)));
