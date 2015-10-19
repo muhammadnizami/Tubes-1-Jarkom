@@ -26,7 +26,7 @@ uint32_t crccompute(const std::string& in){
 			tmpRemainingXOR^=generatorPolynomial<<(32-j);
 		}
 	}
-	while(i<(int)in.length()-4){
+	while(i<(int)in.length()){
 		curUint32 = 0;
 		for (int ii=0;ii<4;ii++){
 			curUint32<<=8;
@@ -43,11 +43,6 @@ uint32_t crccompute(const std::string& in){
 		}
 	}
 	curUint32 = 0;
-	for (int ii=0;ii<4;ii++){
-		curUint32<<=8;
-		curUint32+=(uint8_t)in[i];
-		i++;
-	}
 	curUint32^=tmpRemainingXOR;
 	return curUint32;
 }
