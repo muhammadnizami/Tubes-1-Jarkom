@@ -14,7 +14,7 @@ class frame{
 
 	//untuk membuat dari frameNumber dan data
 	//membuat frame dari frameNumber dan data sesuai format, termasuk menghitung checksum
-	frame(unsigned int frameNumber, std::string data);
+	frame(unsigned int frameNumber, std::string data, bool withendfile=false);
 	const char* getPointerToBytes() const;
 	int getBytesLength() const;
 
@@ -27,6 +27,7 @@ class frame{
 	bool formatIsValid() const; //mengembalikan true bila format benar
 	bool checksumIsValid() const; //mengembalikan true bila checksum benar
 	bool isValid() const; //mengembalikan true bila format dan checksum benar
+	bool withEndFile() const; //mengembalikan true bila terdapat Endfile
 
 	private:
 	std::string bytes;

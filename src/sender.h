@@ -66,6 +66,7 @@ class sender{
 	bool isInWindow(int framenum);
 	int windowPastEnd(){return (windowposition+windowsize)%bufsize;}
 	int windowEnd(){return (windowposition+windowsize-1)%bufsize;}
+	void sendEndFile();
 };
 
 #endif

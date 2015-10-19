@@ -27,6 +27,9 @@ class receiver{
 	int buffertail; //menunjukkan posisi "ekor" buffer: yang belum dikonsumsi. apabila buffertail==windowposition maka buffer belum dapat digunakan
 	bool bufferIsFilled[bufsize];
 
+	//file control
+	bool EndFileReceived;
+
 	//tambah variabel socket
 	int sockfd;
 	struct sockaddr_in si_me, si_other;

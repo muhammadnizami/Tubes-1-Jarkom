@@ -3,19 +3,21 @@
 
 #include "frame.h"
 #include "dcomm.h"
+#include "escape.h"
 
 #include <cassert>
 
 //untuk membuat dari frameNumber dan data
 //membuat frame dari frameNumber dan data sesuai format, termasuk menghitung checksum
-frame::frame(unsigned int frameNumber, std::string data){
+frame::frame(unsigned int frameNumber, std::string data, bool withendfile){
 	bytes="";
 	bytes+=SOH;	
 	for(int i = 0; i < sizeof(frameNumber); i++) {
 		bytes+=((unsigned char)(frameNumber >> (i * 8)));
 	}
 	bytes+=STX;
-	bytes+=data;
+	bytes+=replaceToEscape(data);
+	if (withendfile) bytes+=Endfile;
 	bytes+=ETX;
 	bytes+=createChecksum(bytes);
 }
@@ -40,7 +42,7 @@ std::string frame::getData() const{ //mengembalikan data. prekondisi: isValid()
 	unsigned int STXpos=5;
 	unsigned int ETXpos;
 	for (ETXpos=STXpos;bytes[ETXpos]!=ETX;ETXpos++){}
-	return bytes.substr(STXpos+1,ETXpos-STXpos-1);
+	return replaceNoEscape(bytes.substr(STXpos+1,ETXpos-STXpos-1));
 }
 std::string frame::getChecksum()const{ //mengembalikan checksum. prekondisi: formatIsValid()
 	unsigned int STXpos=5;
@@ -66,6 +68,15 @@ bool frame::isValid() const{ //mengembalikan true bila format dan checksum benar
 	if (formatIsValid()){
 		return checksumIsValid();
 	}else return false;
+}
+
+bool frame::withEndFile() const{ //mengembalikan true bila terdapat Endfile
+	assert(isValid());
+	unsigned int STXpos=5;
+	for (int i=STXpos+1;bytes[i]!=ETX;i++){
+		if (bytes[i]==Endfile) return true;
+	}
+	return false;
 }
 
 #endif

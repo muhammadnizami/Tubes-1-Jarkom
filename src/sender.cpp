@@ -146,8 +146,10 @@ sender& sender::operator<<(std::istream& str){
 			msg="";
 		}
 	}
-	msg+=Endfile;
-	*this<<msg;
+	if (msg.length()<charperframe)
+		*this<<msg;
+
+	sendEndFile();
 	
 	stopSending(); //harusnya dipanggil waktu baca EOF
 	closefd();
@@ -208,6 +210,20 @@ bool sender::isInWindow(int frameNum){
 	if (windowEnd()<windowposition)
 		return (frameNum>=0&&frameNum<=windowEnd()) || (frameNum>=windowposition&&frameNum<=bufsize);
 	else	return frameNum>=windowposition && frameNum<=windowEnd();
+}
+
+
+void sender::sendEndFile(){
+	std::cout<<"buffering Endfile"<<std::endl;
+	frame f(bufferhead, "", true);
+	//wait
+	while(isBufferFull)usleep(100000);
+	//letakkan frame di buffer yang ke bufferHead
+	buffer[bufferhead] = f;
+	sent[bufferhead] = false;
+	acked[bufferhead] = false;
+	buffered[bufferhead] = true;
+	geserBufferHead();
 }
 
 #endif

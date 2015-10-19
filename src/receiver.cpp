@@ -28,20 +28,20 @@ std::string receiver::popStringFromOneFrame(){
 	buffertail++;
 	if (buffertail>=bufsize) buffertail=0;
 	//std::cerr << "popping done" << std::endl;
+	if (curFrame.withEndFile()) EndFileReceived=true;
 	return curFrame.getData();
 }
 
 #define WAITBEFORECLOSEDURATION 2000000
 receiver& receiver::operator>>(std::ostream& str){
+	EndFileReceived=false;
 	startReceiving();
 	std::string curString = "";
 	do{
 		str<<curString;
 		str.flush();
 		curString=popStringFromOneFrame();
-	}while (!curString.empty()?*curString.rbegin()!=Endfile:true);
-	curString.pop_back();
-	str<<curString;
+	}while (!curString.empty()?!EndFileReceived:true);
 	usleep(WAITBEFORECLOSEDURATION);
 	stopReceiving();
 	closefd();
