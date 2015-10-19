@@ -18,12 +18,12 @@
 #define XOFF (0x13)
 
 /* SLIDING WINDOW Properties*/
-#define WINDOW_SIZE 2048
-#define bufsize 4096
+#define WINDOW_SIZE 64
+#define bufsize 128
 
 /* SENDER Properties */
 #define ACKTIMEOUTSECONDS 0.100
-#define PREFERREDFRAMEDATASIZE 5
+#define PREFERREDFRAMEDATASIZE 10
 
 
 #endif
