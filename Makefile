@@ -1,4 +1,4 @@
-all: obj bin bin/sender bin/receiver 
+all: obj bin bin/sender bin/receiver  bin/sender-SENGAJASALAH
 
 bin: 
 	mkdir -p bin
@@ -20,3 +20,7 @@ obj/checksum.o: src/checksum.h src/checksum.cpp
 
 obj/ackframe.o: src/ackframe.h src/ackframe.cpp src/dcomm.h
 	g++ -c src/ackframe.cpp -o obj/ackframe.o
+
+
+bin/sender-SENGAJASALAH: src/msender.cpp src/sender.h src/sender-SENGAJASALAH.cpp obj/frame.o obj/checksum.o obj/ackframe.o src/dcomm.h
+	g++ src/msender.cpp src/sender-SENGAJASALAH.cpp obj/frame.o obj/checksum.o obj/ackframe.o -o bin/sender-SENGAJASALAH -pthread -std=c++11

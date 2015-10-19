@@ -8,6 +8,11 @@
 
 #include <cassert>
 
+//untuk sengaja salah
+#include <ctime>
+#include <cstdlib>
+#define PROBSALAHPERCENT 12
+
 //kata nizam ada tiga thread: yang ngirim, yang nerima ack, dan yang consum
 std::string getReal(const std::string& in);
 extern std::string status;
@@ -21,13 +26,29 @@ void* sending (void * callerobj){
 				int j = (senderobj->windowposition + i)%(senderobj->bufsize_sender);
 				if (senderobj->buffered[j])
 				if (!senderobj->sent[j]){
-					size_t sentBytes=sendto(senderobj->s, senderobj->buffer[j].getPointerToBytes(),senderobj->buffer[j].getBytesLength(),0,(struct sockaddr*) &senderobj->si_other ,sizeof(senderobj->si_other));
+					size_t sentBytes;
+					//kirim salah atau benar
+					if (rand()%100<PROBSALAHPERCENT){
+						std::string tempstr (senderobj->buffer[j].getPointerToBytes(),senderobj->buffer[j].getBytesLength());
+						tempstr[rand()%tempstr.length()]++;
+						sentBytes=sendto(senderobj->s, tempstr.c_str(),tempstr.length(),0,(struct sockaddr*) &senderobj->si_other ,sizeof(senderobj->si_other));
+					}else{
+						sentBytes=sendto(senderobj->s, senderobj->buffer[j].getPointerToBytes(),senderobj->buffer[j].getBytesLength(),0,(struct sockaddr*) &senderobj->si_other ,sizeof(senderobj->si_other));
+					}
 					senderobj->sent[j] = true;
 					senderobj->timesent[j]=clock();
 					std::cout<<"sent frame "<<senderobj->buffer[j].getFrameNumber()<<std::endl;
 				} else if (senderobj->sent[j] && !senderobj->acked[j]
 					&& (float(clock()-senderobj->timesent[j]))/CLOCKS_PER_SEC>nonstricttimeoutseconds){//tidak menerima ack atau menerima nak setelah timeout
-					size_t sentBytes=sendto(senderobj->s, senderobj->buffer[j].getPointerToBytes(),senderobj->buffer[j].getBytesLength(),0,(struct sockaddr*) &senderobj->si_other ,sizeof(senderobj->si_other));
+					size_t sentBytes;
+					//kirim salah atau benar
+					if (rand()%100<PROBSALAHPERCENT){
+						std::string tempstr (senderobj->buffer[j].getPointerToBytes(),senderobj->buffer[j].getBytesLength());
+						tempstr[rand()%tempstr.length()]++;
+						sentBytes=sendto(senderobj->s, tempstr.c_str(),tempstr.length(),0,(struct sockaddr*) &senderobj->si_other ,sizeof(senderobj->si_other));
+					}else{
+						sentBytes=sendto(senderobj->s, senderobj->buffer[j].getPointerToBytes(),senderobj->buffer[j].getBytesLength(),0,(struct sockaddr*) &senderobj->si_other ,sizeof(senderobj->si_other));
+					}
 					senderobj->sent[j] = true;
 					senderobj->timesent[j]=clock();
 					std::cout<<"timeout, retry, sent frame "<<senderobj->buffer[j].getFrameNumber()<<std::endl;

@@ -63,7 +63,9 @@ class sender{
 	void geserJendela(int n){windowposition=(windowposition+n)%bufsize_sender;isBufferFull=false;}
 	void geserBufferHead(){bufferhead=(bufferhead+1)%bufsize_sender;if(bufferhead==windowposition){isBufferFull=true;}}
 	bool bufferIsEmpty(){for (int i=0;i<bufsize_sender;i++) if (buffered[i])return false; return true;}
-
+	bool isInWindow(int framenum);
+	int windowPastEnd(){return (windowposition+windowsize)%bufsize;}
+	int windowEnd(){return (windowposition+windowsize-1)%bufsize;}
 };
 
 #endif
